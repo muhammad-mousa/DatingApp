@@ -11,26 +11,27 @@ import { ToastService } from '../../core/services/toast-service';
   styleUrl: './nav.css',
 })
 export class Nav {
-protected accountService = inject(AccountService);
-private router = inject(Router);
-private toastService = inject(ToastService);
-protected creds: any = {};
+  protected accountService = inject(AccountService);
+  private router = inject(Router);
+  private toastService = inject(ToastService);
+  protected creds: any = {};
 
-login() {
-  this.accountService.login(this.creds).subscribe({
-    next: (response) => {
-      this.router.navigateByUrl('/members');
-      this.creds = {};
-    },
-    error: (error) => {
-      debugger;
-      this.toastService.error(error.error);
-    }
-  });
-}
+  login() {
+    this.accountService.login(this.creds).subscribe({
+      next: (response) => {
+        this.router.navigateByUrl('/members');
+        this.creds = {};
+        this.toastService.success('Login successful');
+      },
+      error: (error) => {
+        debugger;
+        this.toastService.error(error.error);
+      }
+    });
+  }
 
-logout() {
-this.accountService.logout();
-this.router.navigateByUrl('/');
-}
+  logout() {
+    this.accountService.logout();
+    this.router.navigateByUrl('/');
+  }
 }
