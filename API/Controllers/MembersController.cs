@@ -45,7 +45,6 @@ namespace API.Controllers
             member.Country = memberUpdateDto.Country ?? member.Country;
 
             member.User.DisplayName = member.DisplayName ?? member.User.DisplayName;
-            //memberRepository.Update(member); // Mark entity as modified
             if (await memberRepository.SaveAllAsync()) return NoContent();
             return BadRequest("Failed to update member");
         }
