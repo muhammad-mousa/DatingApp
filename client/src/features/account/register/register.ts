@@ -1,35 +1,51 @@
-import { Component, inject, input, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RegisterCreds, User } from '../../../types/user';
+import { Component, inject, OnInit, output } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AccountService } from '../../../core/services/account-service';
+import { RegisterCreds } from '../../../types/user';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule, JsonPipe],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-export class Register {
+export class Register implements OnInit {
   private accountService = inject(AccountService);
-cancelRegister = output<boolean>();
-protected creds = {} as RegisterCreds;
+  cancelRegister = output<boolean>();
+  protected creds = {} as RegisterCreds;
+  protected registerForm: FormGroup = new FormGroup({});
 
-protected register(){
-  this.accountService.register(this.creds).subscribe({
-    next: user => {
-      console.log('Registration successful', user);
-      if (user) {
-        this.cancel();
-      }
-    },
-    error: err => {
-      console.error('Registration failed', err);
-    }
-  });
-}
+  ngOnInit(): void {
+    this.initializeForm();
+  }
 
-cancel() {
-  this.cancelRegister.emit(false);
-}
+  initializeForm() {
+    this.registerForm = new FormGroup({
+      email: new FormControl(),
+      displayName: new FormControl(),
+      password: new FormControl(),
+      confirmPassword: new FormControl()
+    });
+  }
+
+  protected register() {
+    console.log(this.registerForm.value)
+    // this.accountService.register(this.creds).subscribe({
+    //   next: user => {
+    //     console.log('Registration successful', user);
+    //     if (user) {
+    //       this.cancel();
+    //     }
+    //   },
+    //   error: err => {
+    //     console.error('Registration failed', err);
+    //   }
+    // });
+  }
+
+  cancel() {
+    this.cancelRegister.emit(false);
+  }
 
 }
